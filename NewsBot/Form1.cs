@@ -13,7 +13,8 @@ namespace NewsBot
             Log = message => textBox1.AppendText($"{DateTime.Now}: {message}{Environment.NewLine}");
             
             var token = config.GetSection("TelegramBot").GetValue<string>("AccessToken") ?? string.Empty;
-            teleBot = new TeleBot(token, Log);
+            long chatId = config.GetSection("TelegramBot").GetValue<long>("ChatId");
+            teleBot = new TeleBot(token, chatId, Log);
         }
 
         private void Form1_Load(object sender, EventArgs e)
