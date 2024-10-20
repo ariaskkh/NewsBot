@@ -10,11 +10,14 @@ public class TeleBot
     private readonly TelegramBotClient bot;
     private Action<string> log;
     private readonly long chatId = 0;
-    public TeleBot(string accessToken, long chatId, Action<string> log)
+    private readonly List<NewsKeyword> keywords;
+
+    public TeleBot(string accessToken, long chatId, List<NewsKeyword> keywords, Action<string> log)
     {
         bot = new TelegramBotClient(accessToken);
         this.log = log;
         this.chatId = chatId;
+        this.keywords = keywords;
     }
 
     public async Task Start()
@@ -51,9 +54,10 @@ public class TeleBot
     {
         if (msg.Text == "/keywords")
         {
+            var keywordsText = String.Join(", ", keywords.Select(word => $"'{word.text}'"));
             await bot.SendTextMessageAsync(
                 chatId: msg.Chat,
-                text: "hihi, you said keywords !");
+                text: $"등록된 keyword: [{keywordsText}]");
         }
     }
 

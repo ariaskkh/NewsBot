@@ -5,8 +5,9 @@ namespace NewsCrawling;
 
 public class YahooFinanceCrawler
 {
-    Action<string> log;
-    List<NewsKeyword> keywordList = []; // TODO: 인메모리가 아니라 파일이나 db에 저장하기
+    private Action<string> log;
+    private readonly List<NewsKeyword> keywordList = []; // TODO: 인메모리가 아니라 파일이나 db에 저장하기
+    public List<NewsKeyword> KeywordList => keywordList;
 
     public YahooFinanceCrawler(Action<string> Log)
     {
