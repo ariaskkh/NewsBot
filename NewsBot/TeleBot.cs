@@ -1,4 +1,7 @@
 ﻿using Telegram.Bot;
+using Telegram.Bot.Polling;
+using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
 
 namespace NewsBot;
 
@@ -19,6 +22,11 @@ public class TeleBot
         var me = await bot.GetMeAsync();
         log.Invoke($"hihi. {me.Id}, {me.Username}");
         await SendMessage("heyheyehy");
+
+        await SetBotCommands();
+
+        bot.OnMessage += OnMessage;
+        bot.OnError += OnError;
     }
 
     public Task Stop()
@@ -37,6 +45,29 @@ public class TeleBot
         {
             log.Invoke($"Error sending message: {ex.Message}");
         }
+    }
 
+    private async Task OnMessage(Telegram.Bot.Types.Message msg, UpdateType type)
+    {
+        if (msg.Text == "/keywords")
+        {
+            await bot.SendTextMessageAsync(
+                chatId: msg.Chat,
+                text: "hihi, you said keywords !");
+        }
+    }
+
+    private async Task OnError(Exception exception, HandleErrorSource source)
+    {
+        log.Invoke(exception.Message);
+    }
+
+    private async Task SetBotCommands()
+    {
+        var commands = new BotCommand[]
+        {
+            new BotCommand { Command = "keywords", Description = "Show Keywords Added" },
+        };
+        await bot.SetMyCommandsAsync(commands);
     }
 }
