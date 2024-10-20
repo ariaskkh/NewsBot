@@ -1,6 +1,6 @@
 ﻿namespace NewsCrawling.Models;
 
-internal class NewsKeyword
+public class NewsKeyword
 {
     public string text { get; set; }
 
