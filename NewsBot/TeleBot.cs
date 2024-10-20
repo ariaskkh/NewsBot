@@ -10,13 +10,17 @@ public class TeleBot
     private readonly TelegramBotClient bot;
     private Action<string> log;
     private readonly long chatId = 0;
-    private readonly List<NewsKeyword> keywords;
+    private List<NewsKeyword> keywords = [];
 
-    public TeleBot(string accessToken, long chatId, List<NewsKeyword> keywords, Action<string> log)
+    public TeleBot(string accessToken, long chatId, Action<string> log)
     {
         bot = new TelegramBotClient(accessToken);
         this.log = log;
         this.chatId = chatId;
+    }
+
+    public void SetKeywords(List<NewsKeyword> keywords)
+    {
         this.keywords = keywords;
     }
 

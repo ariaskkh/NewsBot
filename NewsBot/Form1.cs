@@ -16,18 +16,19 @@ namespace NewsBot
 
             var token = config.GetSection("TelegramBot").GetValue<string>("AccessToken") ?? string.Empty;
             long chatId = config.GetSection("TelegramBot").GetValue<long>("ChatId");
+            teleBot = new TeleBot(token, chatId, Log);
             yahooCrawler = new YahooFinanceCrawler(Log);
-            teleBot = new TeleBot(token, chatId, yahooCrawler.KeywordList, Log);
+            teleBot.SetKeywords(yahooCrawler.KeywordList);
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
         }
 
-        private void Start_Click(object sender, EventArgs e)
+        private async void Start_Click(object sender, EventArgs e)
         {
-            teleBot.Start();
-            //yahooCrawler.CrawlYahooNews();
+            await teleBot.Start();
+            await yahooCrawler.CrawlYahooNews();
         }
 
         private void Stop_Click(object sender, EventArgs e)
