@@ -14,7 +14,7 @@ namespace NewsBot
             InitializeComponent();
             // TODO: 클래스에서 다양한 형태 log 만들 수 있게 만들기
             Log = message => textBox1.AppendText($"{DateTime.Now}: {message}{Environment.NewLine}");
-            
+
             var token = config.GetSection("TelegramBot").GetValue<string>("AccessToken") ?? string.Empty;
             long chatId = config.GetSection("TelegramBot").GetValue<long>("ChatId");
             teleBot = new TeleBot(token, chatId, Log);
@@ -36,9 +36,41 @@ namespace NewsBot
             teleBot.Stop();
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
+        private void LogBox(object sender, EventArgs e)
         {
 
+        }
+
+        private void KeywordAdd_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(keywordInputBox.Text))
+            {
+                var result = yahooCrawler.AddKeyword(keywordInputBox.Text);
+                if (result)
+                {
+                    keywordListBox.Text += $"{keywordInputBox.Text} {Environment.NewLine}";
+                    keywordInputBox.Text = string.Empty;
+                }
+            }
+        }
+
+        private void KeywordRemove_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(keywordInputBox.Text))
+            {
+                var result = yahooCrawler.RemoveKeyword(keywordInputBox.Text);
+                if (result)
+                {
+                    keywordListBox.Text = SubstringFromText(keywordListBox.Text, keywordInputBox.Text);
+                    keywordInputBox.Text = string.Empty;
+                }
+            }
+        }
+
+        private string SubstringFromText(string wholeString, string substring)
+        {
+            var parts = wholeString.Split($"{substring} {Environment.NewLine}");
+            return parts[0] + parts[1];
         }
     }
 }
